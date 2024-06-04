@@ -14,6 +14,16 @@ app.post("/register", async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const prisma = new PrismaClient();
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (existingUser) {
+    return res.status(409).json({ message: "Email already registered" });
+  }
+
   const user = await prisma.user.create({
     data: {
       email,
