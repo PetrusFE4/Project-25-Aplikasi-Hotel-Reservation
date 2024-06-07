@@ -1,0 +1,43 @@
+###
+POST http://localhost:5000/api/users/register
+Content-Type: application/json
+
+{
+    "name": "Ahmad Huda",
+    "email": "salam@gmail.com",
+    "password": "rahasia"
+}
+
+###
+POST http://localhost:5000/api/users/login
+Content-Type: application/json
+
+{
+    "email": "salam@gmail.com",
+    "password": "rahasia"
+}
+
+###
+GET http://localhost:5000/api/users/current
+Content-Type: application/json
+Accept: application/json
+
+###
+GET http://localhost:5000/api/users
+Content-Type: application/json
+Accept: application/json
+Authorization: 
+
+###
+POST http://localhost:5000/api/verify-token
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhbGFtQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcxNzc2MjExNSwiZXhwIjoxNzE3ODQ4NTE1fQ.ZuXBf1ARnlUR3zcT83xOiaeHAWhM668jSrxWRO8qM6M"
+}
+
+###
+DELETE http://localhost:5000/api/users/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: 

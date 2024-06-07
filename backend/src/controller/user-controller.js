@@ -15,8 +15,28 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const result = await userService.login(req.body);
+    res.cookie("token", result, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: false,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
     res.status(200).json({
-      data: result,
+      message: "User logged in successfully",
+      data: {
+        token: result,
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("token");
+    res.status(200).json({
+      message: "User logged out successfully",
     });
   } catch (e) {
     next(e);
@@ -25,8 +45,9 @@ const login = async (req, res, next) => {
 
 const get = async (req, res, next) => {
   try {
-    const result = await userService.get();
-    response.status(200).json({
+    const email = req.user.email;
+    const result = await userService.get(email);
+    res.status(200).json({
       data: result,
     });
   } catch (e) {
@@ -34,4 +55,15 @@ const get = async (req, res, next) => {
   }
 };
 
-export default { register, login, get };
+const getUsers = async (req, res, next) => {
+  try {
+    const result = await userService.getUsers();
+    res.status(200).json({
+      data: result,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export default { register, login, get, getUsers, logout };

@@ -1,5 +1,4 @@
 import {
-  getUserValidation,
   loginUserValidation,
   registerUserValidation,
 } from "../validation/user-validation.js";
@@ -25,7 +24,11 @@ const register = async (request) => {
   user.password = await bcrypt.hash(user.password, 10);
 
   return prismaClient.user.create({
-    data: user,
+    data: {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    },
     select: {
       name: true,
       email: true,
@@ -41,36 +44,32 @@ const login = async (request) => {
       email: loginRequest.email,
     },
     select: {
-      name: true,
       email: true,
-      password: true,
       role: true,
+      password: true,
     },
   });
 
   if (!user) {
-    throw new ResponseError(401, "Email or password wrong");
+    throw new ResponseError(401, "Username or password wrong");
   }
 
   const isPasswordValid = await bcrypt.compare(
     loginRequest.password,
     user.password
   );
-
   if (!isPasswordValid) {
-    throw new ResponseError(401, "Email or password wrong");
+    throw new ResponseError(401, "Username or password wrong");
   }
 
-  const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-    expiresIn: "12h",
-  });
-
-  return { token };
+  return jwt.sign(
+    { email: user.email, name: user.name, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
 };
 
 const get = async (email) => {
-  const email = validate(getUserValidation, email);
-
   const user = await prismaClient.user.findUnique({
     where: {
       email: email,
@@ -89,4 +88,14 @@ const get = async (email) => {
   return user;
 };
 
-export default { register, login, get };
+const getUsers = async () => {
+  return prismaClient.user.findMany({
+    select: {
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+};
+
+export default { register, login, get, getUsers };

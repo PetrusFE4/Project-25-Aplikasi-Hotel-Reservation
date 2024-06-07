@@ -21,12 +21,9 @@ const loginUserValidation = joi.object({
     "string.empty": "Email is required",
     "string.email": "Email should be a valid email",
   }),
-  password: joi.string().min(6).required().messages({
+  password: joi.string().required().messages({
     "string.empty": "Password is required",
-    "string.min": "Password should have a minimum length of 6",
   }),
 });
 
-const getUserValidation = joi.string().email().required();
-
-export { registerUserValidation, loginUserValidation, getUserValidation };
+export { registerUserValidation, loginUserValidation };

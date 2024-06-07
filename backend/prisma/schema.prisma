@@ -9,12 +9,11 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            String    @id @default(uuid()) @db.Char(36)
   name          String    @db.VarChar(100)
   email         String    @unique
   password      String    @db.VarChar(100)
   role          Role      @default(USER)
-  token         String?    @db.Text()
   creation_time DateTime  @default(now())
   update_time   DateTime  @default(now())
   archived      Boolean   @default(false)
