@@ -4,7 +4,7 @@ import {
   NavigateNextOutlined,
   Star,
 } from "@mui/icons-material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -320,23 +320,6 @@ const SearchedHotelsList = () => {
 
   // console.log(sortBy);
 
-  const [hotelListData, setHotelListData] = useState([]);
-
-  const getAllHotels = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/hotels");
-      const data = await response.json();
-      setHotelListData(data);
-      console.log(data[0]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getAllHotels();
-  }, []);
-
   const handleSortByAndOpenList = (e) => {
     setSortBy(e.target.value);
     setOpenList(false);
@@ -345,7 +328,7 @@ const SearchedHotelsList = () => {
   return (
     <Container>
       <h2>
-        {hotelListData[0]?.place} {featuredCityData.length} Pilihan Kota
+        {featuredCityData[0].place} {featuredCityData.length} Pilihan Kota
       </h2>
       <FilterContainer>
         <FilterButton onClick={() => setOpenList(!openList)}>
@@ -373,7 +356,7 @@ const SearchedHotelsList = () => {
           </OptionsListContainer>
         )}
       </FilterContainer>
-      {hotelListData.map((hotel) => (
+      {featuredCityData.map((hotel) => (
         <HotelList key={hotel.id}>
           <LeftContainer>
             <ImgContainer>
