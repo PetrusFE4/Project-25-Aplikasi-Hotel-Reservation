@@ -4,10 +4,14 @@ import {
   NavigateNextOutlined,
   Star,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { featuredCityData, hotelListData, hotelListDataBandung } from "../dummyData";
+import {
+  featuredCityData,
+  hotelListData,
+  hotelListDataBandung,
+} from "../dummyData";
 
 const Container = styled.div`
   /* border: 1px solid red; */
@@ -316,6 +320,23 @@ const SearchedHotelsList = () => {
 
   // console.log(sortBy);
 
+  const [hotelListData, setHotelListData] = useState([]);
+
+  const getAllHotels = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/hotels");
+      const data = await response.json();
+      setHotelListData(data);
+      console.log(data[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllHotels();
+  }, []);
+
   const handleSortByAndOpenList = (e) => {
     setSortBy(e.target.value);
     setOpenList(false);
@@ -324,7 +345,7 @@ const SearchedHotelsList = () => {
   return (
     <Container>
       <h2>
-        {featuredCityData[0].place} {featuredCityData.length} Pilihan Kota
+        {hotelListData[0]?.place} {featuredCityData.length} Pilihan Kota
       </h2>
       <FilterContainer>
         <FilterButton onClick={() => setOpenList(!openList)}>
@@ -345,8 +366,6 @@ const SearchedHotelsList = () => {
                 <option onClick={handleSortByAndOpenList}>Harga Murah</option>
               </li>
 
-              
-
               <li>
                 <option onClick={handleSortByAndOpenList}>Top Review</option>
               </li>
@@ -354,7 +373,7 @@ const SearchedHotelsList = () => {
           </OptionsListContainer>
         )}
       </FilterContainer>
-      {featuredCityData.map((hotel) => (
+      {hotelListData.map((hotel) => (
         <HotelList key={hotel.id}>
           <LeftContainer>
             <ImgContainer>
@@ -441,6 +460,5 @@ const SearchedHotelsList = () => {
     </Container>
   );
 };
-
 
 export default SearchedHotelsList;

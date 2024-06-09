@@ -1,0 +1,31 @@
+###
+POST http://localhost:5000/api/users/register
+Content-Type: application/json
+
+{
+    "name": "Ahmad Huda",
+    "email": "salam@gmail.com",
+    "password": "rahasia"
+}
+
+###
+POST http://localhost:5000/api/users/login
+Content-Type: application/json
+
+{
+    "email": "salam@gmail.com",
+    "password": "rahasia"
+}
+
+###
+GET http://localhost:5000/api/users/current
+Content-Type: application/json
+Accept: application/json
+
+###
+DELETE http://localhost:5000/api/users/logout
+Content-Type: application/json
+
+
+###
+GET http://localhost:5000/api/hotels

@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid()) @db.Char(36)
+  name          String    @db.VarChar(100)
+  email         String    @unique
+  password      String    @db.VarChar(100)
+  role          Role      @default(USER)
+  creation_time DateTime  @default(now())
+  update_time   DateTime  @default(now())
+  archived      Boolean   @default(false)
+
+  @@map("tbl_users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Hotel {
+  id           Int     @id @default(autoincrement())
+  name         String
+  place        String
+  distance     Float?
+  address      String?
+  offer        String?
+  roomDetails  String?
+  bedDetails   String?
+  roomLeft     Int?
+  rating       Float?
+  reviews      Int?
+  night        Int?
+  adult        Int?
+  children     Int?
+  price        Int?
+  images       HotelImage[]
+  location     Location?
+
+  @@map("tbl_hotels")
+}
+
+model HotelImage {
+  id       Int    @id @default(autoincrement())
+  imgUrl   String
+  hotelId  Int
+  hotel    Hotel  @relation(fields: [hotelId], references: [id])
+
+  @@index([hotelId])
+}
+
+model Location {
+  id      Int    @id @default(autoincrement())
+  lat     Float
+  lng     Float
+  hotelId Int   @unique
+  hotel   Hotel  @relation(fields: [hotelId], references: [id])
+
+  @@index([hotelId])
+}
