@@ -14,5 +14,6 @@ publicRouter.get("/ping", healthController.ping);
 
 // Hotel routes
 publicRouter.get("/api/hotels", hotelController.getAllHotels);
+publicRouter.get("/api/hotel/:id", hotelController.getHotelById);
 
 export { publicRouter };
