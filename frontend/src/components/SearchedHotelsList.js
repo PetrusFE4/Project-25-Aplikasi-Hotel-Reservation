@@ -4,14 +4,10 @@ import {
   NavigateNextOutlined,
   Star,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {
-  featuredCityData,
-  hotelListData,
-  hotelListDataBandung,
-} from "../dummyData";
+import { featuredCityData, hotelListDataBandung } from "../dummyData";
 
 const Container = styled.div`
   /* border: 1px solid red; */
@@ -317,8 +313,23 @@ const Button = styled.button`
 const SearchedHotelsList = () => {
   const [openList, setOpenList] = useState(false);
   const [sortBy, setSortBy] = useState("Our top picks");
+  const [hotels, setHotels] = useState([]);
 
   // console.log(sortBy);
+
+  const getHotels = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/hotels");
+      const data = await res.json();
+      setHotels(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getHotels();
+  }, []);
 
   const handleSortByAndOpenList = (e) => {
     setSortBy(e.target.value);
@@ -356,7 +367,7 @@ const SearchedHotelsList = () => {
           </OptionsListContainer>
         )}
       </FilterContainer>
-      {featuredCityData.map((hotel) => (
+      {hotels.map((hotel) => (
         <HotelList key={hotel.id}>
           <LeftContainer>
             <ImgContainer>

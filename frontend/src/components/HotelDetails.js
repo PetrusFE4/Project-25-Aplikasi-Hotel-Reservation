@@ -7,10 +7,8 @@ import {
   Star,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
-import { hotelListData } from "../dummyData";
 import styled from "styled-components";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 
 const Container = styled.div`
   /* border: 1px solid red; */
@@ -338,17 +336,18 @@ const Slides = styled.div`
 const HotelDetails = () => {
   const [openSlider, setOpenSlider] = useState(false);
   const [slideNumber, setSlideNumber] = useState(0);
+  const [hotel, setHotel] = useState({});
 
-  const hotelId = useLocation().pathname.split("/")[2];
+  // const hotelId = useLocation().pathname.split("/")[2];
   // console.log(typeof hotelId);
 
   // Got Array of single object
-  const hotel = hotelListData.filter(
-    (hotel) => hotel.id.toString() === hotelId
-  );
-  // console.log(hotel[0].img);
+  // const hotel = hotelListData.filter(
+  //   (hotel) => hotel.id.toString() === hotelId
+  // );
+  // // console.log(hotel[0].img);
 
-  const hotelRating = hotel[0].rating;
+  // const hotelRating = hotel[0].rating;
 
   const handleImgClickForSlider = (indexNumber) => {
     setSlideNumber(indexNumber);
@@ -365,6 +364,23 @@ const HotelDetails = () => {
     }
   };
 
+  const getHotel = async () => {
+    try {
+      const hotelId = window.location.pathname.split("/").pop();
+      const response = await fetch(
+        `http://localhost:5000/api/hotel/${hotelId}`
+      );
+      const data = await response.json();
+      setHotel(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getHotel();
+  }, []);
+
   return (
     <Container>
       <DetailsContainer>
@@ -372,21 +388,21 @@ const HotelDetails = () => {
           <BoxesContainer>
             <Box1>Hotel</Box1>
             <Box2>
-              {(hotelRating === 1 && <Star className="star-icon" />) ||
-                (hotelRating === 2 && (
+              {(hotel.rating === 1 && <Star className="star-icon" />) ||
+                (hotel.rating === 2 && (
                   <>
                     <Star className="star-icon" />
                     <Star className="star-icon" />
                   </>
                 )) ||
-                (hotelRating === 3 && (
+                (hotel.rating === 3 && (
                   <>
                     <Star className="star-icon" />
                     <Star className="star-icon" />
                     <Star className="star-icon" />
                   </>
                 )) ||
-                (hotelRating === 4 && (
+                (hotel.rating === 4 && (
                   <>
                     <Star className="star-icon" />
                     <Star className="star-icon" />
@@ -394,7 +410,7 @@ const HotelDetails = () => {
                     <Star className="star-icon" />
                   </>
                 )) ||
-                (hotelRating === 5 && (
+                (hotel.rating === 5 && (
                   <>
                     <Star className="star-icon" />
                     <Star className="star-icon" />
@@ -418,10 +434,10 @@ const HotelDetails = () => {
           </BtnContainer>
         </BoxBtnContainer>
         <AddressContainer>
-          <h2>{hotel[0].name}</h2>
+          <h2>{hotel.name}</h2>
           <p>
             <LocationOn className="location-icon" />
-            {hotel[0].address}
+            {hotel.address}
           </p>
         </AddressContainer>
       </DetailsContainer>
@@ -429,7 +445,7 @@ const HotelDetails = () => {
       <ImagesContainer>
         <BigMedImgContainer>
           <MedImgContainer>
-            {hotel[0].img.slice(1, 3).map((imgSrc, index) => (
+            {hotel.img?.slice(1, 3).map((imgSrc, index) => (
               <div key={index}>
                 <img
                   src={imgSrc}
@@ -443,7 +459,7 @@ const HotelDetails = () => {
 
           <BigImgContainer>
             <img
-              src={hotel[0].img[0]}
+              src={hotel.img?.slice(0, 1)}
               alt="hotel"
               title="Lihat gambar"
               onClick={() => handleImgClickForSlider(0)}
@@ -452,7 +468,7 @@ const HotelDetails = () => {
         </BigMedImgContainer>
 
         <SamllImgContainer>
-          {hotel[0].img.slice(3, 8).map((imgSrc, index) => (
+          {hotel.img?.slice(3, 8).map((imgSrc, index) => (
             <div key={index}>
               <img
                 src={imgSrc}
@@ -481,7 +497,7 @@ const HotelDetails = () => {
               onClick={() => setOpenSlider(false)}
             />
 
-            <img src={hotel[0].img[slideNumber]} alt="hotel" />
+            <img src={hotel.img[slideNumber]} alt="hotel" />
           </Slides>
         </Slider>
       )}
