@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid()) @db.Char(36)
+  id            String    @id @default(uuid())
   name          String    @db.VarChar(100)
   email         String    @unique
   password      String    @db.VarChar(100)
@@ -28,22 +28,22 @@ enum Role {
 
 model Hotel {
   id           Int     @id @default(autoincrement())
-  name         String
+  name         String  @unique
   place        String
-  distance     Float?
-  address      String?
-  offer        String?
-  roomDetails  String?
-  bedDetails   String?
-  roomLeft     Int?
-  rating       Float?
-  reviews      Int?
-  night        Int?
-  adult        Int?
-  children     Int?
-  price        Int?
+  distance     Float
+  address      String
+  offer        String
+  roomDetails  String
+  bedDetails   String
+  roomLeft     Int
+  rating       Float
+  reviews      Int
+  night        Int
+  adult        Int
+  children     Int
+  price        Int
   images       HotelImage[]
-  location     Location?
+  location     HotelLocation?
 
   @@map("tbl_hotels")
 }
@@ -55,9 +55,10 @@ model HotelImage {
   hotel    Hotel  @relation(fields: [hotelId], references: [id])
 
   @@index([hotelId])
+  @@map("tbl_hotel_images")
 }
 
-model Location {
+model HotelLocation {
   id      Int    @id @default(autoincrement())
   lat     Float
   lng     Float
@@ -65,4 +66,15 @@ model Location {
   hotel   Hotel  @relation(fields: [hotelId], references: [id])
 
   @@index([hotelId])
+  @@map("tbl_hotel_locations")
+}
+
+model FeaturedCities {
+  id      Int    @id @default(autoincrement())
+  img     String
+  name    String
+  desc    String
+  hotels  Int
+
+  @@map("tbl_featured_cities")
 }
