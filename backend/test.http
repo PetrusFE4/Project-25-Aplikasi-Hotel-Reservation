@@ -29,3 +29,17 @@ Content-Type: application/json
 
 ###
 GET http://localhost:5000/api/hotels
+
+
+###
+POST http://localhost:5000/api/booking/1
+Content-Type: application/json
+
+{
+    "name": "Ahmad Huda",
+    "email": "salam@gmail.com",
+    "hotelId": 1,
+    "checkInDate": "2024-06-12",
+    "checkOutDate": "2024-06-15",
+    "guests": 2
+}
