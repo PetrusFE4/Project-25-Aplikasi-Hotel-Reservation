@@ -27,8 +27,18 @@ const createHotel = async (req, res, next) => {
   }
 };
 
+const deleteHotel = async (req, res, next) => {
+  try {
+    await hotelService.deleteHotel(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllHotels,
   getHotelById,
-  createHotel,
+  // createHotel,
+  // deleteHotel,
 };

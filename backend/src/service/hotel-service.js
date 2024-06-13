@@ -68,30 +68,38 @@ const getHotelById = async (id) => {
 };
 
 const createHotel = async () => {
-  const hotel = await prismaClient.hotel.create({
-    name: "The Residences of The Ritz-Carlton Jakarta Pacific Place",
-    place: "Jakarta",
-    distance: 6.7,
-    address: "Jalan Jendral Sudirman Kav. 52-53, 12190 Jakarta, Indonesia",
-    offer: "Breakfast Included",
-    roomDetails: "Luxury Room with Bath Tub",
-    bedDetails: "1 king size single bed",
-    roomLeft: 5,
-    rating: 5,
-    reviews: 312,
-    night: 1,
-    adult: 2,
-    children: 1,
-    price: 3150000,
-  });
+  const hotel = await prismaClient.hotel.create({});
 
   const hotelImages = await prismaClient.image.createMany({});
 
   const location = await prismaClient.location.create({});
 };
 
+const deleteHotel = async (id) => {
+  await prismaClient.hotel.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  await prismaClient.image.deleteMany({
+    where: {
+      hotelId: id,
+    },
+  });
+
+  await prismaClient.location.delete({
+    where: {
+      hotelId: id,
+    },
+  });
+
+  return;
+};
+
 export default {
   getAllHotels,
   getHotelById,
-  createHotel,
+  // createHotel,
+  // deleteHotel,
 };
