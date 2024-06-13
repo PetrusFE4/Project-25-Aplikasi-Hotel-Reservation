@@ -6,7 +6,6 @@ import {
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { featuredCityData, hotelListDataBandung } from "../dummyData";
 import {
   Container,
   FilterContainer,
@@ -30,10 +29,7 @@ import {
 
 const SearchedHotelsList = () => {
   const [openList, setOpenList] = useState(false);
-  const [sortBy, setSortBy] = useState("Our top picks");
   const [hotels, setHotels] = useState([]);
-
-  // console.log(sortBy);
 
   const getHotels = async () => {
     try {
@@ -50,18 +46,14 @@ const SearchedHotelsList = () => {
   }, []);
 
   const handleSortByAndOpenList = (e) => {
-    setSortBy(e.target.value);
     setOpenList(false);
   };
 
   return (
     <Container>
-      <h2>
-        {featuredCityData[0].place} {featuredCityData.length} Pilihan Kota
-      </h2>
       <FilterContainer>
         <FilterButton onClick={() => setOpenList(!openList)}>
-          Cari dari: {sortBy}
+          Kota
           <IconContainer>
             <ExpandLessOutlined className="expand-icon" />
             <ExpandMoreOutlined className="expand-icon" />
@@ -72,14 +64,7 @@ const SearchedHotelsList = () => {
             <ul>
               <li>
                 <option onClick={handleSortByAndOpenList}>Top Hotel</option>
-              </li>
-
-              <li>
-                <option onClick={handleSortByAndOpenList}>Harga Murah</option>
-              </li>
-
-              <li>
-                <option onClick={handleSortByAndOpenList}>Top Review</option>
+                {/* Looping from database */}
               </li>
             </ul>
           </OptionsListContainer>
@@ -90,13 +75,30 @@ const SearchedHotelsList = () => {
           <LeftContainer>
             <ImgContainer>
               <Link to={`/hotel/${hotel.id}`}>
-                <img src={hotel.img[0]} alt="hotel" />
+                <img
+                  src={hotel.img[0]}
+                  alt="hotel"
+                  style={{
+                    transform: "scale(1)",
+                    transition: "transform 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = "scale(1.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = "scale(1)";
+                  }}
+                />
               </Link>
             </ImgContainer>
             <InfoContainer>
               <Details>
-                <h2>{hotel.name}</h2>
-                <span>{hotel.distance} Hotel Di kota Jakarta</span>
+                <Link
+                  to={`/hotel/${hotel.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <h2>{hotel.name}</h2>
+                </Link>
               </Details>
               <OfferInfo>{hotel.offer}</OfferInfo>
               <Facilities>

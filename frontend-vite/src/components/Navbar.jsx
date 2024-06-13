@@ -1,20 +1,11 @@
 import {
-  AirportShuttleOutlined,
-  AttractionsOutlined,
-  BedOutlined,
-  ConnectingAirportsOutlined,
-  CurrencyExchangeOutlined,
-  DirectionsCarOutlined,
-  HelpOutlineOutlined,
+  HomeOutlined,
   HotelOutlined,
   HowToRegOutlined,
   LoginOutlined,
   LogoutOutlined,
-  NightShelterOutlined,
-  SearchOutlined,
-  TranslateOutlined,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import {
   Container,
@@ -28,6 +19,7 @@ import {
 
 const Navbar = () => {
   const [openmenu, setopenmenu] = useState("false");
+  const location = useLocation();
 
   return (
     <Container>
@@ -41,26 +33,35 @@ const Navbar = () => {
         </LogoContainer>
 
         <BtnContainer>
-          <span>INA</span>
-          <img src="/images/flag.png" alt="Countries" />
-          <HelpOutlineOutlined className="help-icon" />
-          <Link to="/register">
-            <Button className="bigBtn">List your Property</Button>
-          </Link>
-          <Link to="/register">
+          <Link
+            to="/register"
+            style={{ display: location.pathname === "/register" ? "none" : "" }}
+          >
             <Button>Register</Button>
           </Link>
-          <Link to="/login">
+          <Link
+            to="/login"
+            style={{ display: location.pathname === "/login" ? "none" : "" }}
+          >
             <Button>Login</Button>
           </Link>
+
+          {/* <Link
+            to="/profile"
+            style={{ display: location.pathname === "/profile" ? "none" : "" }}
+          >
+            <Button>Profile</Button>
+          </Link>
+          <Link to="/logout">
+            <Button>Logout</Button>
+          </Link> */}
         </BtnContainer>
 
         {/* For Mobile Start */}
 
         <ImgAndHamburgerContainer>
-          <img src="images/boydp.jpg" alt="" />
           <div
-            className={`hamburger ${openmenu && "close-hamburger"}`}
+            className={`hamburger ${openmenu ? "close-hamburger" : ""}`}
             onClick={() => setopenmenu(!openmenu)}
           >
             <span></span>
@@ -75,14 +76,14 @@ const Navbar = () => {
       <SecondNavContainer openmenu={openmenu}>
         <ul>
           <Link to="/" className="link">
-            <li className="active">
-              <BedOutlined className="li-icon" />
-              Stays
+            <li className={location.pathname === "/" ? "active" : ""}>
+              <HomeOutlined className="li-icon" />
+              Home
             </li>
           </Link>
 
           <Link to="/hotels" className="link">
-            <li>
+            <li className={location.pathname === "/hotels" ? "active" : ""}>
               <HotelOutlined className="li-icon" />
               Hotels
             </li>
@@ -90,42 +91,7 @@ const Navbar = () => {
         </ul>
 
         {/* For Mobile Start */}
-
-        <h3>Hello, Satya Thakur</h3>
-
-        <ul className="hidden-ul">
-          <Link to="/hotels" className="link">
-            <li>
-              <SearchOutlined className="li-icon" />
-              Search Hotels
-            </li>
-          </Link>
-          <Link to="/register" className="link">
-            <li className="active">
-              <NightShelterOutlined className="li-icon" />
-              List Your Property
-            </li>
-          </Link>
-          <Link to="/hotel/3" className="link">
-            <li>
-              <CurrencyExchangeOutlined className="li-icon" />
-              Currency Exchange
-            </li>
-          </Link>
-          <Link to="/login" className="link">
-            <li>
-              <TranslateOutlined className="li-icon" />
-              Language
-            </li>
-          </Link>
-
-          <Link to="/hotel/5" className="link">
-            <li>
-              <HelpOutlineOutlined className="li-icon" />
-              Help
-            </li>
-          </Link>
-        </ul>
+        <h3>Hello, User</h3>
 
         <ul className="hidden-ul">
           <Link to="/register" className="link">

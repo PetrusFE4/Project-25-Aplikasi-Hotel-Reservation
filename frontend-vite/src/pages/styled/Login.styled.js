@@ -62,6 +62,7 @@ const OtherContainer = styled.div`
 
 const Wrapper = styled.div`
   /* border: 1px solid gray; */
+  width: 290px;
   max-width: 430px;
   margin: 50px 20px;
 

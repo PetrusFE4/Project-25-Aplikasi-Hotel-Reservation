@@ -1,69 +1,38 @@
-import { HelpOutline } from "@mui/icons-material";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  NavContainer,
-  NavWrapper,
-  LeftContainer,
-  RightContainer,
-  OtherContainer,
-  Wrapper,
-  Form,
-  MethodContainer,
-  TermConditioContainer,
-  Copyright,
-} from "./styled/Login.styled";
+import { useNavigate } from "react-router-dom";
+import { OtherContainer, Wrapper, Form } from "./styled/Login.styled";
+import Navbar from "../components/Navbar";
+import axios from "axios";
+import { endpoint } from "../api.js";
 
 const Login = () => {
-  const navigate = useNavigate(); // useNavigate untuk versi react-router-dom terbaru
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        endpoint.loginUser,
+        {
+          email,
+          password,
         },
-        body: JSON.stringify({ email, password }),
-      });
+        { withCredentials: true }
+      );
 
-      if (!response.ok) {
-        throw new Error("Pastikan data anda benar");
-      }
-
-      const data = await response.json();
-      console.log(data);
-      setSuccess(true);
-      setError(""); // Mengosongkan error jika login berhasil
-      navigate("/"); // Menggunakan navigate untuk pindah halaman
+      alert(response.data.message);
+      navigate("/");
     } catch (error) {
-      console.error(error);
-      setError(error.message); // Menetapkan pesan error
-      setSuccess(false); // Mengatur kembali ke false jika login gagal
+      alert(error.response.data.message);
     }
   };
 
   return (
     <>
-      <NavContainer>
-        <NavWrapper>
-          <LeftContainer>
-            <Link to="/" className="homepage-link">
-              My Booking
-            </Link>
-          </LeftContainer>
-          <RightContainer>
-            <HelpOutline className="help-icon" />
-            <img src="/images/flag.png" alt="Languages" />
-          </RightContainer>
-        </NavWrapper>
-      </NavContainer>
+      <Navbar />
 
       <OtherContainer>
         <Wrapper>
@@ -90,8 +59,6 @@ const Login = () => {
 
             <button type="submit">Login</button>
           </Form>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {success && <p>Login successful!</p>}
         </Wrapper>
       </OtherContainer>
     </>

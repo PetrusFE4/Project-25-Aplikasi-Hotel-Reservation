@@ -1,27 +1,14 @@
-import { HelpOutline } from "@mui/icons-material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  NavContainer,
-  NavWrapper,
-  LeftContainer,
-  RightContainer,
-  OtherContainer,
-  Wrapper,
-  Form,
-  MethodContainer,
-  TermConditioContainer,
-  Copyright,
-} from "./styled/Register.styled";
+import { OtherContainer, Wrapper, Form } from "./styled/Register.styled";
 import { endpoint } from "../api.js";
 import axios from "axios";
+import Navbar from "../components/Navbar";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [name, setName] = useState("");
 
   const handleSubmit = async (e) => {
@@ -39,39 +26,15 @@ const Register = () => {
         password,
       });
 
-      if (response.status === 409) {
-        throw new Error(alert("Email Sudah Ada"));
-      }
-
-      if (!response.ok) {
-        throw new Error(alert("Pastikan data anda benar"));
-      }
-
-      const data = await response.json();
-      console.log(data);
-      setSuccess(true);
-      setError("");
+      alert(response.data.message);
     } catch (error) {
-      console.error(error);
-      setError(error.message);
+      alert(error.response.data.message);
     }
   };
 
   return (
     <>
-      <NavContainer>
-        <NavWrapper>
-          <LeftContainer>
-            <Link to="/" className="homepage-link">
-              My Booking
-            </Link>
-          </LeftContainer>
-          <RightContainer>
-            <HelpOutline className="help-icon" />
-            <img src="/images/flag.png" alt="Languages" />
-          </RightContainer>
-        </NavWrapper>
-      </NavContainer>
+      <Navbar />
 
       <OtherContainer>
         <Wrapper>
@@ -118,7 +81,6 @@ const Register = () => {
             <button type="submit">Register</button>
           </Form>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          {success && <p>Registration successful!</p>}
         </Wrapper>
       </OtherContainer>
     </>

@@ -1,9 +1,7 @@
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import Map from "../components/Map";
 import SearchedHotelsList from "../components/SearchedHotelsList";
 import Footer from "../components/Footer";
-import Newsletter from "../components/Newsletter";
 import {
   Container,
   MainContainer,
@@ -18,17 +16,10 @@ const HotelList = () => {
       <Navbar />
       <MainContainer>
         <Wrapper>
-          <SideContainer>
-            <div id="sticky-container">
-              <Sidebar />
-              <Map />
-            </div>
-          </SideContainer>
           <HotelListContainer>
             <SearchedHotelsList />
           </HotelListContainer>
         </Wrapper>
-        <Newsletter />
       </MainContainer>
       <Footer />
     </Container>

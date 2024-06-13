@@ -1,28 +1,20 @@
 import {
-  AirportShuttleOutlined,
-  AttractionsOutlined,
-  BedOutlined,
   CalendarMonthOutlined,
-  ConnectingAirportsOutlined,
-  CurrencyExchangeOutlined,
-  DirectionsCarOutlined,
-  HelpOutlineOutlined,
   HotelOutlined,
+  HomeOutlined,
   HowToRegOutlined,
   LocationOnOutlined,
   LoginOutlined,
   LogoutOutlined,
-  NightShelterOutlined,
   PersonOutlineOutlined,
   SearchOutlined,
-  TranslateOutlined,
 } from "@mui/icons-material";
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Container,
   TopContainer,
@@ -49,6 +41,7 @@ import {
 } from "./styled/HomeNavbar.styled";
 
 const HomeNavbar = () => {
+  const location = useLocation();
   const [openmenu, setopenmenu] = useState("false");
   const [openDate, setOpenDate] = useState(false);
   const [date, setDate] = useState([
@@ -66,8 +59,6 @@ const HomeNavbar = () => {
   });
 
   const handleCount = (name, operation) => {
-    // console.log(options["room"], name, options[name]); // Accessing room key's value by Square Bracket method from "options" Object. We are using options[name] because here name variable is String that is "room". We can't use it like options.name bcoz it means options."room" which is undefined.
-
     setOptions((prev) => {
       return {
         ...prev,
@@ -91,28 +82,28 @@ const HomeNavbar = () => {
         <Wrapper>
           <NavContainer>
             <LogoContainer>
-              <span>My Booking</span>
+              <span style={{ cursor: "pointer" }}>My Booking</span>
             </LogoContainer>
 
             <BtnContainer>
-              <span>INA</span>
-              <img src="images/flag.png" alt="Countries" />
-              <HelpOutlineOutlined className="help-icon" />
-              <Link to="/register">
-                <Button className="bigBtn">List Your Property</Button>
-              </Link>
               <Link to="/register">
                 <Button>Register</Button>
               </Link>
               <Link to="/login">
                 <Button>Login</Button>
               </Link>
+
+              {/* <Link to="/profile">
+                <Button>Profile</Button>
+              </Link>
+              <Link to="/logout">
+                <Button>Logout</Button>
+              </Link> */}
             </BtnContainer>
 
             {/* For Mobile Start */}
 
             <ImgAndHamburgerContainer>
-              <img src="images/bodyp.jpg" alt="" />
               <div
                 className={`hamburger ${openmenu && "close-hamburger"}`}
                 onClick={() => setopenmenu(!openmenu)}
@@ -128,15 +119,15 @@ const HomeNavbar = () => {
 
           <SecondNavContainer openmenu={openmenu}>
             <ul>
-              <Link to="/hotels" className="link">
-                <li className="active">
-                  <BedOutlined className="li-icon" />
-                  Stays
+              <Link to="/" className="link">
+                <li className={location.pathname === "/" ? "active" : ""}>
+                  <HomeOutlined className="li-icon" />
+                  Home
                 </li>
               </Link>
 
               <Link to="/hotels" className="link">
-                <li>
+                <li className={location.pathname === "/hotels" ? "active" : ""}>
                   <HotelOutlined className="li-icon" />
                   Hotels
                 </li>
@@ -146,39 +137,6 @@ const HomeNavbar = () => {
             {/* For Mobile Start */}
 
             <h3>Hello, User</h3>
-
-            <ul className="hidden-ul">
-              <Link to="/hotels" className="link">
-                <li>
-                  <SearchOutlined className="li-icon" />
-                  Search Hotels
-                </li>
-              </Link>
-              <Link to="/register" className="link">
-                <li className="active">
-                  <NightShelterOutlined className="li-icon" />
-                  List Your Property
-                </li>
-              </Link>
-              <Link to="/hotel/3" className="link">
-                <li>
-                  <CurrencyExchangeOutlined className="li-icon" />
-                  Currency Exchange
-                </li>
-              </Link>
-              <Link to="/hotels" className="link">
-                <li>
-                  <TranslateOutlined className="li-icon" />
-                  Language
-                </li>
-              </Link>
-              <Link to="/hotel/5" className="link">
-                <li>
-                  <HelpOutlineOutlined className="li-icon" />
-                  Help
-                </li>
-              </Link>
-            </ul>
 
             <ul className="hidden-ul">
               <Link to="/register" className="link">
