@@ -23,9 +23,33 @@ Content-Type: application/json
 Accept: application/json
 
 ###
+PUT http://localhost:5000/api/users/update
+Content-Type: application/json
+
+{
+    "id": "e0dd993a-55bb-4e06-8f60-921309f0b682",
+    "name": "Ahmad Huda",
+    "email": "salam@gmail.com"
+}
+
+###
 DELETE http://localhost:5000/api/users/logout
 Content-Type: application/json
 
 
 ###
 GET http://localhost:5000/api/hotels
+
+
+###
+POST http://localhost:5000/api/booking/1
+Content-Type: application/json
+
+{
+    "name": "Ahmad Huda",
+    "email": "salam@gmail.com",
+    "hotelId": 1,
+    "checkInDate": "2024-06-12",
+    "checkOutDate": "2024-06-15",
+    "guests": 2
+}

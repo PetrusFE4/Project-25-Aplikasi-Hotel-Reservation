@@ -6,8 +6,8 @@ import {
   LocationOn,
   Star,
 } from "@mui/icons-material";
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   Container,
   DetailsContainer,
@@ -29,28 +29,14 @@ import {
   Slides,
 } from "./styled/HotelDetails.styled";
 
-const HotelDetails = () => {
+const HotelDetails = ({ hotel }) => {
   const [openSlider, setOpenSlider] = useState(false);
   const [slideNumber, setSlideNumber] = useState(0);
-  const [hotel, setHotel] = useState({});
-
-  // const hotelId = useLocation().pathname.split("/")[2];
-  // console.log(typeof hotelId);
-
-  // Got Array of single object
-  // const hotel = hotelListData.filter(
-  //   (hotel) => hotel.id.toString() === hotelId
-  // );
-  // // console.log(hotel[0].img);
-
-  // const hotelRating = hotel[0].rating;
 
   const handleImgClickForSlider = (indexNumber) => {
     setSlideNumber(indexNumber);
     setOpenSlider(true);
   };
-
-  // console.log(slideNumber);
 
   const handleSlide = (direction) => {
     if (direction === "right") {
@@ -60,22 +46,7 @@ const HotelDetails = () => {
     }
   };
 
-  const getHotel = async () => {
-    try {
-      const hotelId = window.location.pathname.split("/").pop();
-      const response = await fetch(
-        `http://localhost:5000/api/hotel/${hotelId}`
-      );
-      const data = await response.json();
-      setHotel(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getHotel();
-  }, []);
+  const baseImageUrl = import.meta.env.VITE_API_BASE_URL;
 
   return (
     <Container>
@@ -124,9 +95,15 @@ const HotelDetails = () => {
             </Box5>
           </BoxesContainer>
           <BtnContainer>
-            <Link to={`/booking/${hotel.id}`}>
-              <button>Pesan Sekarang</button>
-            </Link>
+            {hotel.roomLeft === 0 ? (
+              <button disabled style={{ backgroundColor: "#1b5bb9" }}>
+                Booking Now
+              </button>
+            ) : (
+              <Link to={`/booking/${hotel.id}`}>
+                <button>Booking Now</button>
+              </Link>
+            )}
           </BtnContainer>
         </BoxBtnContainer>
         <AddressContainer>
@@ -144,7 +121,7 @@ const HotelDetails = () => {
             {hotel.img?.slice(1, 3).map((imgSrc, index) => (
               <div key={index}>
                 <img
-                  src={imgSrc}
+                  src={baseImageUrl + "/" + imgSrc}
                   alt="hotel"
                   title="Lihat gambar"
                   onClick={() => handleImgClickForSlider(index + 1)}
@@ -155,7 +132,7 @@ const HotelDetails = () => {
 
           <BigImgContainer>
             <img
-              src={hotel.img?.slice(0, 1)}
+              src={baseImageUrl + "/" + hotel.img?.slice(0, 1)}
               alt="hotel"
               title="Lihat gambar"
               onClick={() => handleImgClickForSlider(0)}
@@ -167,7 +144,7 @@ const HotelDetails = () => {
           {hotel.img?.slice(3, 8).map((imgSrc, index) => (
             <div key={index}>
               <img
-                src={imgSrc}
+                src={baseImageUrl + "/" + imgSrc}
                 alt="hotel"
                 title="Lihat gambar"
                 onClick={() => handleImgClickForSlider(index + 3)}
@@ -193,7 +170,10 @@ const HotelDetails = () => {
               onClick={() => setOpenSlider(false)}
             />
 
-            <img src={hotel.img[slideNumber]} alt="hotel" />
+            <img
+              src={baseImageUrl + "/" + hotel.img[slideNumber]}
+              alt="hotel"
+            />
           </Slides>
         </Slider>
       )}

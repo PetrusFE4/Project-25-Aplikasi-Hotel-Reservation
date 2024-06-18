@@ -26,27 +26,51 @@ import {
   Price,
   Button,
 } from "./styled/SearchedHotelsList.styled";
+import axios from "axios";
+import { endpoint } from "../api";
 
 const SearchedHotelsList = () => {
   const [openList, setOpenList] = useState(false);
   const [hotels, setHotels] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
 
   const getHotels = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/hotels");
-      const data = await res.json();
-      setHotels(data);
+      const response = await axios.get(endpoint.getHotels);
+      setHotels(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getHotelsByCity = async (city) => {
+    try {
+      const response = await axios.get(endpoint.getHotelsByCity(city), {
+        withCredentials: true,
+      });
+      setHotels(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getHotels();
-  }, []);
+    if (selectedCity) {
+      getHotelsByCity(selectedCity);
+    } else {
+      getHotels();
+    }
+  }, [selectedCity]);
 
-  const handleSortByAndOpenList = (e) => {
+  const handleCitySelection = (city) => {
+    setSelectedCity(city);
     setOpenList(false);
+  };
+
+  const baseImageUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const formatPrice = (price) => {
+    return `Rp. ${price.toLocaleString("id-ID")}`;
   };
 
   return (
@@ -59,12 +83,29 @@ const SearchedHotelsList = () => {
             <ExpandMoreOutlined className="expand-icon" />
           </IconContainer>
         </FilterButton>
-        {openList === true && (
+        {openList && (
           <OptionsListContainer>
             <ul>
               <li>
-                <option onClick={handleSortByAndOpenList}>Top Hotel</option>
-                {/* Looping from database */}
+                <option onClick={() => handleCitySelection("")}>All</option>
+                <option onClick={() => handleCitySelection("Jakarta")}>
+                  Jakarta
+                </option>
+                <option onClick={() => handleCitySelection("Bandung")}>
+                  Bandung
+                </option>
+                <option onClick={() => handleCitySelection("Bali")}>
+                  Bali
+                </option>
+                <option onClick={() => handleCitySelection("Yogyakarta")}>
+                  Yogyakarta
+                </option>
+                <option onClick={() => handleCitySelection("Lombok")}>
+                  Lombok
+                </option>
+                <option onClick={() => handleCitySelection("Surabaya")}>
+                  Surabaya
+                </option>
               </li>
             </ul>
           </OptionsListContainer>
@@ -76,7 +117,7 @@ const SearchedHotelsList = () => {
             <ImgContainer>
               <Link to={`/hotel/${hotel.id}`}>
                 <img
-                  src={hotel.img[0]}
+                  src={baseImageUrl + "/" + hotel.img[0]}
                   alt="hotel"
                   style={{
                     transform: "scale(1)",
@@ -150,7 +191,7 @@ const SearchedHotelsList = () => {
                     </>
                   ))}
               </StarIconContainer>
-              <span>{hotel.reviews} reviews</span>
+              <span>{hotel.reviewsCount} reviews</span>
             </RatingContainer>
             <PriceContainer>
               <Price>
@@ -158,7 +199,7 @@ const SearchedHotelsList = () => {
                   {hotel.night} Night, {hotel.adult} Adult,
                   {hotel.children > 0 && ` ${hotel.children} Children`}
                 </span>
-                <h2>{hotel.price}</h2>
+                <h2>{formatPrice(hotel.price)}</h2>
                 <span>{hotel.otherCharges}</span>
               </Price>
               <Button>

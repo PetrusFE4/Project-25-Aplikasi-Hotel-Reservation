@@ -1,109 +1,164 @@
-import React, { useState } from "react";
-import styles from "./styled/Booking.styled";
+import { useState, useEffect } from "react";
+import { OtherContainer, Wrapper, Form } from "./styled/Booking.styled";
+import { endpoint } from "../api.js";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import { useNavigate, useParams } from "react-router-dom";
 
-const BookingForm = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [checkInDate, setCheckInDate] = useState("");
-  const [checkOutDate, setCheckOutDate] = useState("");
-  const [guests, setGuests] = useState("");
+const Booking = () => {
+  const [userId, setUserId] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    startDate: "",
+    endDate: "",
+    guests: 2,
+  });
+  const { hotelId } = useParams();
+  const [hotel, setHotel] = useState({});
+  const navigate = useNavigate();
 
-  const { id } = useParams();
-  const hotelId = parseInt(id);
-  const guestCount = parseInt(guests);
+  const getHotel = async () => {
+    try {
+      const response = await axios.get(endpoint.getHotelById(hotelId));
+      const hotelData = response.data;
+      setHotel(hotelData);
+      if (hotelData.roomLeft === 0) {
+        navigate("/hotels");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const confirmed = window.confirm(
+        "Are you sure you want to book this hotel?"
+      );
+      if (!confirmed) {
+        return;
+      }
+
       const response = await axios.post(
-        `http://localhost:5000/api/booking/${id}`,
+        endpoint.bookingHotel,
         {
-          name,
-          email,
-          checkInDate,
-          checkOutDate,
-          guests: guestCount,
-          hotelId,
+          name: formData.name,
+          hotelId: hotelId,
+          userId: userId,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          guests: formData.guests,
+        },
+        {
+          withCredentials: true,
         }
       );
-      console.log(response.data);
+
+      setFormData({
+        name: "",
+        startDate: "",
+        endDate: "",
+        guests: 2,
+      });
+      alert(response.data.message);
+      navigate("/profile");
     } catch (error) {
-      console.log(error.response.data.errors);
+      console.error("Failed to book hotel", error);
     }
   };
 
+  useEffect(() => {
+    const verifyLogin = async () => {
+      try {
+        const response = await axios.get(endpoint.getCurrentUser, {
+          withCredentials: true,
+        });
+        setUserId(response.data.data.id);
+      } catch (error) {
+        navigate("/login");
+      }
+    };
+    verifyLogin();
+    getHotel();
+  }, [navigate]);
+
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const todayDate = getTodayDate();
+
   return (
-    <form style={styles.form} onSubmit={handleSubmit}>
-      <label style={styles.label} htmlFor="name">
-        Nama
-      </label>
-      <input
-        style={styles.input}
-        type="text"
-        id="name"
-        name="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
+    <>
+      <Navbar />
 
-      <label style={styles.label} htmlFor="email">
-        Email
-      </label>
-      <input
-        style={styles.input}
-        type="email"
-        id="email"
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+      <OtherContainer>
+        <Wrapper>
+          <h2>Booking Form</h2>
+          <Form onSubmit={handleSubmit}>
+            <label htmlFor="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+              autoComplete="off"
+            />
 
-      <label style={styles.label} htmlFor="checkInDate">
-        Tanggal Check-in
-      </label>
-      <input
-        style={styles.input}
-        type="date"
-        id="checkInDate"
-        name="checkInDate"
-        value={checkInDate}
-        onChange={(e) => setCheckInDate(e.target.value)}
-        required
-      />
+            <label htmlFor="startDate">Start Date</label>
+            <input
+              type="date"
+              id="startDate"
+              value={formData.startDate}
+              onChange={(e) =>
+                setFormData({ ...formData, startDate: e.target.value })
+              }
+              required
+              autoComplete="off"
+              min={todayDate}
+            />
 
-      <label style={styles.label} htmlFor="checkOutDate">
-        Tanggal Check-out
-      </label>
-      <input
-        style={styles.input}
-        type="date"
-        id="checkOutDate"
-        name="checkOutDate"
-        value={checkOutDate}
-        onChange={(e) => setCheckOutDate(e.target.value)}
-        required
-      />
+            <label htmlFor="endDate">End Date</label>
+            <input
+              type="date"
+              id="endDate"
+              value={formData.endDate}
+              onChange={(e) =>
+                setFormData({ ...formData, endDate: e.target.value })
+              }
+              required
+              autoComplete="off"
+              min={todayDate}
+            />
 
-      <label style={styles.label} htmlFor="guests">
-        Jumlah Tamu
-      </label>
-      <input
-        style={styles.input}
-        type="number"
-        id="guests"
-        name="guests"
-        value={guests}
-        onChange={(e) => setGuests(e.target.value)}
-        required
-      />
+            <label htmlFor="guests">Guests</label>
+            <input
+              type="number"
+              id="guests"
+              value={formData.guests}
+              onChange={(e) =>
+                setFormData({ ...formData, guests: e.target.value })
+              }
+              required
+              autoComplete="off"
+              min="1"
+            />
 
-      <button type="submit">Pesan Sekarang</button>
-    </form>
+            <button type="submit">Booking</button>
+          </Form>
+        </Wrapper>
+      </OtherContainer>
+    </>
   );
 };
 
-export default BookingForm;
+export default Booking;

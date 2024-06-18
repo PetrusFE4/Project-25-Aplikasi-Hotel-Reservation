@@ -1,12 +1,10 @@
 import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
 import SearchedHotelsList from "../components/SearchedHotelsList";
 import Footer from "../components/Footer";
 import {
   Container,
   MainContainer,
   Wrapper,
-  SideContainer,
   HotelListContainer,
 } from "./styled/HotelList.styled";
 

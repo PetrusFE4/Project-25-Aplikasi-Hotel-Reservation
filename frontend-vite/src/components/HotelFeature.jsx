@@ -24,8 +24,9 @@ import {
   Details,
   BtnContainer,
 } from "./styled/HotelFeature.styled";
+import { Link } from "react-router-dom";
 
-const HotelFeature = () => {
+const HotelFeature = ({ hotel }) => {
   return (
     <Container>
       <FeatureBoxContainer>
@@ -127,7 +128,15 @@ const HotelFeature = () => {
           </Details>
 
           <BtnContainer>
-            <button type="button">Pesan </button>
+            {hotel.roomLeft === 0 ? (
+              <button disabled style={{ backgroundColor: "#1b5bb9" }}>
+                Booking Now
+              </button>
+            ) : (
+              <Link to={`/booking/${hotel.id}`}>
+                <button>Book</button>
+              </Link>
+            )}
           </BtnContainer>
         </Aside>
       </SidebarDescContainer>

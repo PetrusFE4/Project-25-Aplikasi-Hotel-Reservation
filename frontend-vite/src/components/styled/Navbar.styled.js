@@ -81,7 +81,6 @@ const BtnContainer = styled.div`
 `;
 
 const Button = styled.button`
-  width: 80px;
   padding: 9px 10px;
   margin-right: 10px;
   color: #2085cb;

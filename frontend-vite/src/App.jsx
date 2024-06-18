@@ -4,8 +4,9 @@ import Hotel from "./pages/Hotel";
 import HotelList from "./pages/HotelList";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import BookingForm from "./pages/Booking";
-import Logout from "./pages/Logout";
+import Booking from "./pages/Booking";
+import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   return (
@@ -16,7 +17,9 @@ const App = () => {
         <Route path="/hotel/:id" element={<Hotel />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/booking/:id" element={<BookingForm />} />
+        <Route path="/booking/:hotelId" element={<Booking />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

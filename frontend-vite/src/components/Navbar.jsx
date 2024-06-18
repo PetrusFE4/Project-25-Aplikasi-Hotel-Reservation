@@ -4,9 +4,11 @@ import {
   HowToRegOutlined,
   LoginOutlined,
   LogoutOutlined,
+  VerifiedUserOutlined,
+  DashboardOutlined,
 } from "@mui/icons-material";
-import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   Container,
   NavContainer,
@@ -16,10 +18,46 @@ import {
   ImgAndHamburgerContainer,
   SecondNavContainer,
 } from "./styled/Navbar.styled";
+import axios from "axios";
+import { endpoint } from "../api.js";
 
 const Navbar = () => {
   const [openmenu, setopenmenu] = useState("false");
   const location = useLocation();
+
+  const [isLogin, setIsLogin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const verifyLogin = async () => {
+      try {
+        const response = await axios.get(endpoint.getCurrentUser, {
+          withCredentials: true,
+        });
+        setIsLogin(true);
+        setUser(response.data.data);
+        setIsAdmin(response.data.data.role === "ADMIN");
+      } catch (error) {
+        setIsLogin(false);
+      }
+    };
+    verifyLogin();
+  }, []);
+
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      const response = await axios.delete(endpoint.logoutUser, {
+        withCredentials: true,
+      });
+      alert(response.data.message);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Container>
@@ -33,28 +71,28 @@ const Navbar = () => {
         </LogoContainer>
 
         <BtnContainer>
-          <Link
-            to="/register"
-            style={{ display: location.pathname === "/register" ? "none" : "" }}
-          >
-            <Button>Register</Button>
-          </Link>
-          <Link
-            to="/login"
-            style={{ display: location.pathname === "/login" ? "none" : "" }}
-          >
-            <Button>Login</Button>
-          </Link>
-
-          {/* <Link
-            to="/profile"
-            style={{ display: location.pathname === "/profile" ? "none" : "" }}
-          >
-            <Button>Profile</Button>
-          </Link>
-          <Link to="/logout">
-            <Button>Logout</Button>
-          </Link> */}
+          {isLogin ? (
+            <>
+              <Link to="/profile">
+                <Button>Profile</Button>
+              </Link>
+              {isAdmin && (
+                <Link to="/dashboard">
+                  <Button>Dashboard</Button>
+                </Link>
+              )}
+              <Button onClick={logout}>Logout</Button>
+            </>
+          ) : (
+            <>
+              <Link to="/register">
+                <Button>Register</Button>
+              </Link>
+              <Link to="/login">
+                <Button>Login</Button>
+              </Link>
+            </>
+          )}
         </BtnContainer>
 
         {/* For Mobile Start */}
@@ -94,24 +132,49 @@ const Navbar = () => {
         <h3>Hello, User</h3>
 
         <ul className="hidden-ul">
-          <Link to="/register" className="link">
-            <li>
-              <HowToRegOutlined className="li-icon" />
-              Register
-            </li>
-          </Link>
-          <Link to="/login" className="link">
-            <li>
-              <LoginOutlined className="li-icon" />
-              Login
-            </li>
-          </Link>
-          <Link to="/hotel/4" className="link">
-            <li>
-              <LogoutOutlined className="li-icon" />
-              Logout
-            </li>
-          </Link>
+          {isLogin ? (
+            <>
+              <Link to="/profile" className="link">
+                <li
+                  className={location.pathname === "/profile" ? "active" : ""}
+                >
+                  <VerifiedUserOutlined className="li-icon" />
+                  Profile
+                </li>
+              </Link>
+              {isAdmin && (
+                <Link to="/dashboard" className="link">
+                  <li
+                    className={
+                      location.pathname === "/dashboard" ? "active" : ""
+                    }
+                  >
+                    <DashboardOutlined className="li-icon" />
+                    Dashboard
+                  </li>
+                </Link>
+              )}
+              <li onClick={logout}>
+                <LogoutOutlined className="li-icon" />
+                Logout
+              </li>
+            </>
+          ) : (
+            <>
+              <Link to="/register" className="link">
+                <li>
+                  <HowToRegOutlined className="li-icon" />
+                  Register
+                </li>
+              </Link>
+              <Link to="/login" className="link">
+                <li>
+                  <LoginOutlined className="li-icon" />
+                  Login
+                </li>
+              </Link>
+            </>
+          )}
         </ul>
 
         {/* For Mobile End */}

@@ -7,13 +7,14 @@ import {
   LoginOutlined,
   LogoutOutlined,
   PersonOutlineOutlined,
-  SearchOutlined,
+  VerifiedUserOutlined,
+  DashboardOutlined,
 } from "@mui/icons-material";
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Container,
@@ -39,11 +40,16 @@ import {
   Quantity,
   SearchBtnContainer,
 } from "./styled/HomeNavbar.styled";
+import axios from "axios";
+import { endpoint } from "../api.js";
+import { useNavigate } from "react-router-dom";
 
 const HomeNavbar = () => {
   const location = useLocation();
   const [openmenu, setopenmenu] = useState("false");
   const [openDate, setOpenDate] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState({});
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -67,6 +73,38 @@ const HomeNavbar = () => {
     });
   };
 
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    const verifyLogin = async () => {
+      try {
+        const response = await axios.get(endpoint.getCurrentUser, {
+          withCredentials: true,
+        });
+        setIsLogin(true);
+        setUser(response.data.data);
+        setIsAdmin(response.data.data.role === "ADMIN");
+      } catch (error) {
+        setIsLogin(false);
+      }
+    };
+    verifyLogin();
+  }, []);
+
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      const response = await axios.delete(endpoint.logoutUser, {
+        withCredentials: true,
+      });
+      alert(response.data.message);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
       <TopContainer>
@@ -86,19 +124,28 @@ const HomeNavbar = () => {
             </LogoContainer>
 
             <BtnContainer>
-              <Link to="/register">
-                <Button>Register</Button>
-              </Link>
-              <Link to="/login">
-                <Button>Login</Button>
-              </Link>
-
-              {/* <Link to="/profile">
-                <Button>Profile</Button>
-              </Link>
-              <Link to="/logout">
-                <Button>Logout</Button>
-              </Link> */}
+              {isLogin ? (
+                <>
+                  <Link to="/profile">
+                    <Button>Profile</Button>
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/dashboard">
+                      <Button>Dashboard</Button>
+                    </Link>
+                  )}
+                  <Button onClick={logout}>Logout</Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/register">
+                    <Button>Register</Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button>Login</Button>
+                  </Link>
+                </>
+              )}
             </BtnContainer>
 
             {/* For Mobile Start */}
@@ -136,27 +183,54 @@ const HomeNavbar = () => {
 
             {/* For Mobile Start */}
 
-            <h3>Hello, User</h3>
+            <h3>Hello, {user.name}</h3>
 
             <ul className="hidden-ul">
-              <Link to="/register" className="link">
-                <li>
-                  <HowToRegOutlined className="li-icon" />
-                  Register
-                </li>
-              </Link>
-              <Link to="/login" className="link">
-                <li>
-                  <LoginOutlined className="li-icon" />
-                  Login
-                </li>
-              </Link>
-              <Link to="/hotel/4" className="link">
-                <li>
-                  <LogoutOutlined className="li-icon" />
-                  Logout
-                </li>
-              </Link>
+              {isLogin ? (
+                <>
+                  <Link to="/profile" className="link">
+                    <li
+                      className={
+                        location.pathname === "/profile" ? "active" : ""
+                      }
+                    >
+                      <VerifiedUserOutlined className="li-icon" />
+                      Profile
+                    </li>
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/dashboard" className="link">
+                      <li
+                        className={
+                          location.pathname === "/dashboard" ? "active" : ""
+                        }
+                      >
+                        <DashboardOutlined className="li-icon" />
+                        Dashboard
+                      </li>
+                    </Link>
+                  )}
+                  <li onClick={logout}>
+                    <LogoutOutlined className="li-icon" />
+                    Logout
+                  </li>
+                </>
+              ) : (
+                <>
+                  <Link to="/register" className="link">
+                    <li>
+                      <HowToRegOutlined className="li-icon" />
+                      Register
+                    </li>
+                  </Link>
+                  <Link to="/login" className="link">
+                    <li>
+                      <LoginOutlined className="li-icon" />
+                      Login
+                    </li>
+                  </Link>
+                </>
+              )}
             </ul>
 
             {/* For Mobile End */}

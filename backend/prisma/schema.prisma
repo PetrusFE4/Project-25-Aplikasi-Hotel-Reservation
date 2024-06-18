@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -16,7 +15,7 @@ model User {
   role          Role      @default(USER)
   creation_time DateTime  @default(now())
   update_time   DateTime  @default(now())
-  archived      Boolean   @default(false)
+  reviews       Review[]  @relation("UserReviews")
 
   @@map("tbl_users")
 }
@@ -27,23 +26,23 @@ enum Role {
 }
 
 model Hotel {
-  id           Int     @id @default(autoincrement())
-  name         String  @unique
+  id           String      @id @default(uuid())
+  name         String      @unique
   place        String
-  distance     Float
   address      String
   offer        String
   roomDetails  String
   bedDetails   String
   roomLeft     Int
   rating       Float
-  reviews      Int
+  reviewsCount Int         @default(0)
   night        Int
   adult        Int
   children     Int
   price        Int
   images       HotelImage[]
-  location     HotelLocation?
+  bookings     Booking[]
+  reviews      Review[]    @relation("HotelReviews")
 
   @@map("tbl_hotels")
 }
@@ -51,30 +50,55 @@ model Hotel {
 model HotelImage {
   id       Int    @id @default(autoincrement())
   imgUrl   String
-  hotelId  Int
+  hotelId  String
   hotel    Hotel  @relation(fields: [hotelId], references: [id])
 
   @@index([hotelId])
   @@map("tbl_hotel_images")
 }
 
-model HotelLocation {
-  id      Int    @id @default(autoincrement())
-  lat     Float
-  lng     Float
-  hotelId Int   @unique
-  hotel   Hotel  @relation(fields: [hotelId], references: [id])
-
-  @@index([hotelId])
-  @@map("tbl_hotel_locations")
-}
-
 model FeaturedCities {
-  id      Int    @id @default(autoincrement())
-  img     String
-  name    String
-  desc    String
-  hotels  Int
+  id          Int    @id @default(autoincrement())
+  img         String
+  name        String
+  countryImg  String
+  desc        String
+  rating      Int
+  hotels      Int
 
   @@map("tbl_featured_cities")
+}
+
+model Booking {
+  id            String      @id @default(uuid())
+  name          String
+  hotelId       String
+  userId        String
+  startDate     DateTime
+  endDate       DateTime
+  guests        Int
+  totalPrice    Int
+  checkInAt     DateTime?
+  checkOutAt    DateTime?
+  creation_time DateTime    @default(now())
+  update_time   DateTime    @default(now())
+  hotel         Hotel       @relation(fields: [hotelId], references: [id])
+  reviews       Review[]    @relation("BookingReviews")
+
+  @@map("tbl_bookings")
+}
+
+model Review {
+  id        String    @id @default(uuid())
+  userId    String
+  hotelId   String
+  bookingId String
+  name      String
+  rating    Int       @db.TinyInt
+  comment   String    @db.Text
+  user      User      @relation("UserReviews", fields: [userId], references: [id])
+  hotel     Hotel?    @relation("HotelReviews", fields: [hotelId], references: [id])
+  booking   Booking?  @relation("BookingReviews", fields: [bookingId], references: [id])
+
+  @@map("tbl_reviews")
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { OtherContainer, Wrapper, Form } from "./styled/Login.styled";
 import Navbar from "../components/Navbar";
@@ -7,21 +7,18 @@ import { endpoint } from "../api.js";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        endpoint.loginUser,
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
+      const response = await axios.post(endpoint.loginUser, formData, {
+        withCredentials: true,
+      });
 
       alert(response.data.message);
       navigate("/");
@@ -29,6 +26,20 @@ const Login = () => {
       alert(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    const verifyLogin = async () => {
+      try {
+        await axios.get(endpoint.getCurrentUser, {
+          withCredentials: true,
+        });
+        navigate("/");
+      } catch (error) {
+        return;
+      }
+    };
+    verifyLogin();
+  }, []);
 
   return (
     <>
@@ -42,8 +53,10 @@ const Login = () => {
             <input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
               autoComplete="off"
             />
@@ -52,8 +65,10 @@ const Login = () => {
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               required
             />
 

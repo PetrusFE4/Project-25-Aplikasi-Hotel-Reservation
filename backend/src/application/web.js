@@ -15,10 +15,7 @@ web.use(
 );
 web.use(cookieParser());
 web.use(express.json());
-web.use(
-  "/hotel-booking-app",
-  express.static(path.join(path.resolve(), "public"))
-);
+web.use(express.static(path.join(path.resolve(), "public")));
 
 web.use(publicRouter);
 web.use(userRouter);

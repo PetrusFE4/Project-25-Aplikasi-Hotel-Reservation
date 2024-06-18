@@ -106,7 +106,6 @@ const BtnContainer = styled.div`
 const Button = styled.button`
   border: 1px solid white;
   background-color: white;
-  width: 80px;
   padding: 9px 10px;
   margin-right: 10px;
   color: #1675de;

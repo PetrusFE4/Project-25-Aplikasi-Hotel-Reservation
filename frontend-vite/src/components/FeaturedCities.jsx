@@ -1,6 +1,5 @@
 import { Star } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import { featuredCityData } from "../dummyData";
 import {
   Container,
   CardContainer,
@@ -14,23 +13,48 @@ import {
   IconContainer,
   ListedProperty,
 } from "./styled/FeaturedCities.styled";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { endpoint } from "../api";
 
 const FeaturedCities = () => {
+  const [featuredCities, setFeaturedCities] = useState([]);
+
+  useEffect(() => {
+    const fetchFeaturedCities = async () => {
+      try {
+        const response = await axios.get(endpoint.getFeaturedCities);
+        setFeaturedCities(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchFeaturedCities();
+  }, []);
+
+  const baseImageUrl = import.meta.env.VITE_API_BASE_URL;
+
   return (
     <Container>
       <h1>Destinasi Populer di Indonesia</h1>
       <p>These popular destinations have a lot to offer</p>
       <CardContainer>
-        {featuredCityData.map((city) => (
+        {featuredCities.map((city) => (
           <Card key={city.id}>
             <Link to="/hotels" className="link">
               <ImgContainer>
-                <img src={city.img} alt="" />
+                <img src={baseImageUrl + "/" + city.img} alt="" />
               </ImgContainer>
               <InfoContainer>
                 <Country>
                   <h1>{city.name}</h1>
-                  <img src={city.countryImg} alt="" className="flag-img" />
+                  <img
+                    src={baseImageUrl + "/" + city.countryImg}
+                    alt=""
+                    className="flag-img"
+                  />
                 </Country>
                 <Desc>{`${city.desc.slice(0, 150)} ...`}</Desc>
                 <OtherInfo>

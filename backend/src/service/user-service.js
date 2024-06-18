@@ -1,6 +1,7 @@
 import {
   loginUserValidation,
   registerUserValidation,
+  updateUserValidation,
 } from "../validation/user-validation.js";
 import { validate } from "../validation/validation.js";
 import { prismaClient } from "../application/database.js";
@@ -10,6 +11,13 @@ import jwt from "jsonwebtoken";
 
 const register = async (request) => {
   const user = validate(registerUserValidation, request);
+
+  if (user.password !== user.confirmPassword) {
+    throw new ResponseError(
+      400,
+      "Password and confirm password must be the same"
+    );
+  }
 
   const countUser = await prismaClient.user.count({
     where: {
@@ -75,6 +83,7 @@ const get = async (email) => {
       email: email,
     },
     select: {
+      id: true,
       name: true,
       email: true,
       role: true,
@@ -88,4 +97,58 @@ const get = async (email) => {
   return user;
 };
 
-export default { register, login, get };
+const update = async (currentEmail, data) => {
+  const user = validate(updateUserValidation, data);
+
+  if (currentEmail !== user.email) {
+    const countUser = await prismaClient.user.count({
+      where: {
+        email: user.email,
+      },
+    });
+
+    if (countUser === 1) {
+      throw new ResponseError(409, "Email already taken");
+    }
+  }
+
+  const updatedUser = await prismaClient.user.update({
+    where: {
+      email: currentEmail,
+    },
+    data: {
+      name: user.name,
+      email: user.email,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+
+  const newToken = jwt.sign(
+    {
+      email: updatedUser.email,
+      name: updatedUser.name,
+      role: updatedUser.role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  return { updatedUser, newToken };
+};
+
+const getAllUsers = async () => {
+  return prismaClient.user.findMany({
+    select: {
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+};
+
+export default { register, login, get, update, getAllUsers };
