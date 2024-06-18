@@ -166,6 +166,7 @@ const Profile = () => {
         );
         alert(response.data.message);
         setIsReviewing(false);
+        setReview({ rating: 1, comment: "" });
         await getBookingHistory(user.id);
       } catch (error) {
         alert(error.response.data.message);

@@ -80,7 +80,7 @@ const SlideContainer = styled.div`
 
 const Slide = styled.div`
   display: flex;
-  min-width: 270px;
+  width: 300px;
   padding: 15px;
   height: 185px;
   overflow-y: auto;
