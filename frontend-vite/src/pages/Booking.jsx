@@ -22,7 +22,7 @@ const Booking = () => {
       const response = await axios.get(endpoint.getHotelById(hotelId));
       const hotelData = response.data;
       setHotel(hotelData);
-      if (hotelData.roomLeft === 0) {
+      if (hotelData.roomLeft <= 0) {
         navigate("/hotels");
       }
     } catch (error) {
@@ -32,6 +32,12 @@ const Booking = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.startDate === formData.endDate) {
+      alert("Start date and end date cannot be the same");
+      return;
+    }
+
     try {
       const confirmed = window.confirm(
         "Are you sure you want to book this hotel?"
@@ -61,8 +67,16 @@ const Booking = () => {
         endDate: "",
         guests: 2,
       });
-      alert(response.data.message);
-      navigate("/profile");
+
+      const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+      const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
+      const script = document.createElement("script");
+      script.src = snapScript;
+      document.head.appendChild(script);
+      script.setAttribute("data-client-key", clientKey);
+      script.onload = () => {
+        window.snap.pay(response.data.token);
+      };
     } catch (error) {
       console.error("Failed to book hotel", error);
     }

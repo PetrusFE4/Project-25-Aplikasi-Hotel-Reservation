@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Booking from "./pages/Booking";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
+import Thanks from "./pages/Thanks";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/booking/:hotelId" element={<Booking />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/thanks" element={<Thanks />} />
       </Routes>
     </BrowserRouter>
   );

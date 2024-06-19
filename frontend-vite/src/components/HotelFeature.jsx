@@ -128,7 +128,7 @@ const HotelFeature = ({ hotel }) => {
           </Details>
 
           <BtnContainer>
-            {hotel.roomLeft === 0 ? (
+            {hotel.roomLeft <= 0 ? (
               <button disabled style={{ backgroundColor: "#1b5bb9" }}>
                 Booking Now
               </button>

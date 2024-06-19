@@ -80,8 +80,10 @@ model Booking {
   totalPrice    Int
   checkInAt     DateTime?
   checkOutAt    DateTime?
+  paymentLink   String?
+  isPaid        Boolean     @default(false)
   creation_time DateTime    @default(now())
-  update_time   DateTime    @default(now())
+  update_time   DateTime    @updatedAt
   hotel         Hotel       @relation(fields: [hotelId], references: [id])
   reviews       Review[]    @relation("BookingReviews")
 

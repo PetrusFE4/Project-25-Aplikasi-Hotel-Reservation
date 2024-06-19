@@ -174,6 +174,8 @@ const Profile = () => {
     }
   };
 
+  console.log(bookingHistory);
+
   return (
     <>
       <Navbar />
@@ -204,6 +206,7 @@ const Profile = () => {
                     <StyledTh>End Date</StyledTh>
                     <StyledTh>Guests</StyledTh>
                     <StyledTh>Price</StyledTh>
+                    <StyledTh>Payment</StyledTh>
                     <StyledTh>Check-in At</StyledTh>
                     <StyledTh>Check-out At</StyledTh>
                     <StyledTh>Review</StyledTh>
@@ -219,6 +222,19 @@ const Profile = () => {
                     <StyledTd>{formatDate(booking.endDate)}</StyledTd>
                     <StyledTd>{booking.guests}</StyledTd>
                     <StyledTd>{formatPrice(booking.totalPrice)}</StyledTd>
+                    <StyledTd>
+                      {booking.isPaid ? (
+                        "Success"
+                      ) : (
+                        <a
+                          href={booking.paymentLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Pay Now
+                        </a>
+                      )}
+                    </StyledTd>
                     <StyledTd>
                       {booking.checkInAt ? (
                         formatDateWithTime(booking.checkInAt)

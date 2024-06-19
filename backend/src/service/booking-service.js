@@ -1,5 +1,6 @@
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
+import midtransClient from "midtrans-client";
 
 const calculateDaysDifference = (checkIn, checkOut) => {
   const startDate = new Date(checkIn);
@@ -53,6 +54,8 @@ const getBookingByUser = async (userId) => {
       totalPrice: true,
       checkInAt: true,
       checkOutAt: true,
+      isPaid: true,
+      paymentLink: true,
       reviews: {
         select: {
           rating: true,
@@ -63,7 +66,7 @@ const getBookingByUser = async (userId) => {
   });
 };
 
-const createBooking = async (bookingData) => {
+const createBooking = async (email, bookingData) => {
   const hotel = await prismaClient.hotel.findUnique({
     where: {
       id: bookingData.hotelId,
@@ -90,7 +93,7 @@ const createBooking = async (bookingData) => {
     },
   });
 
-  return await prismaClient.booking.create({
+  const booking = await prismaClient.booking.create({
     data: {
       name: bookingData.name,
       hotelId: bookingData.hotelId,
@@ -100,17 +103,33 @@ const createBooking = async (bookingData) => {
       guests: parseInt(bookingData.guests),
       totalPrice: totalPrice,
     },
-    select: {
-      id: true,
-      name: true,
-      hotelId: true,
-      userId: true,
-      startDate: true,
-      endDate: true,
-      guests: true,
-      totalPrice: true,
-    },
   });
+
+  const snap = new midtransClient.Snap({
+    isProduction: false,
+    serverKey: process.env.MIDTRANS_SERVER_KEY,
+    clientKey: process.env.MIDTRANS_CLIENT_KEY,
+  });
+
+  const transactionParams = {
+    transaction_details: {
+      order_id: booking.id,
+      gross_amount: totalPrice,
+    },
+    customer_details: {
+      first_name: bookingData.name,
+      email: email,
+    },
+  };
+
+  const transaction = await snap.createTransaction(transactionParams);
+
+  await prismaClient.booking.update({
+    where: { id: booking.id },
+    data: { paymentLink: transaction.redirect_url },
+  });
+
+  return transaction.token;
 };
 
 const checkIn = async (bookingId) => {

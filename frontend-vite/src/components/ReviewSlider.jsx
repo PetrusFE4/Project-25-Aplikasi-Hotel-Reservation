@@ -16,7 +16,6 @@ import { censorName } from "../utils";
 const ReviewSlider = ({ hotel }) => {
   const [slide, setSlide] = useState(0);
   const reviews = hotel.reviews;
-  console.log(reviews);
 
   const handleSlide = (direction) => {
     if (direction === "left") {

@@ -16,10 +16,10 @@ const login = async (req, res, next) => {
   try {
     const result = await userService.login(req.body);
     res.cookie("token", result, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: false,
       maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
     });
     res.status(200).json({
       message: "Login successfully",
@@ -62,11 +62,11 @@ const update = async (req, res, next) => {
     const data = req.body;
     const result = await userService.update(currentEmail, data);
     res.clearCookie("token");
-    res.cookie("token", result.newToken, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: false,
+    res.cookie("token", result, {
       maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
     });
     res.status(200).json({
       message: "Update successfully",

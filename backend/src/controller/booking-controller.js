@@ -26,10 +26,11 @@ const getBookingByUser = async (req, res, next) => {
 
 const createBooking = async (req, res, next) => {
   try {
-    const result = await bookingService.createBooking(req.body);
+    const { email } = req.user;
+    const result = await bookingService.createBooking(email, req.body);
     res.status(201).json({
       message: "Booking successfully",
-      data: result,
+      token: result,
     });
   } catch (e) {
     next(e);

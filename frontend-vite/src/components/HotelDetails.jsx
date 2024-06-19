@@ -95,7 +95,7 @@ const HotelDetails = ({ hotel }) => {
             </Box5>
           </BoxesContainer>
           <BtnContainer>
-            {hotel.roomLeft === 0 ? (
+            {hotel.roomLeft <= 0 ? (
               <button disabled style={{ backgroundColor: "#1b5bb9" }}>
                 Booking Now
               </button>
