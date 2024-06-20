@@ -11,7 +11,7 @@ import Thanks from "./pages/Thanks";
 
 const App = () => {
   return (
-    <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/hotels" element={<HotelList />} />

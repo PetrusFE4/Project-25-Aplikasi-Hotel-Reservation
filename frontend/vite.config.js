@@ -5,7 +5,6 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    base: "/hotel-booking-app",
     port: 3000,
   },
 });
