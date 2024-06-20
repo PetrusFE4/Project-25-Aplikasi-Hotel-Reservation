@@ -11,7 +11,7 @@ export const web = express();
 web.use(
   cors({
     origin: [
-      "http://localhost:3000",
+      "https://fe-msib-6-hotel-reservation-02.educalab.id/hotel-booking-app",
       "https://hotel-booking-app-sepia.vercel.app",
     ],
     credentials: true,
