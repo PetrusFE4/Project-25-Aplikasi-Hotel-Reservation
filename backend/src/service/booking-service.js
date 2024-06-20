@@ -28,6 +28,7 @@ const getAllBookings = async () => {
       endDate: true,
       guests: true,
       totalPrice: true,
+      isPaid: true,
       checkInAt: true,
       checkOutAt: true,
     },

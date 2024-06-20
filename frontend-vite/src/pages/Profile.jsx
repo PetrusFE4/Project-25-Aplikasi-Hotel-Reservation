@@ -102,7 +102,6 @@ const Profile = () => {
         alert(response.data.message);
         setUser(updatedUser);
         setIsEditing(false);
-        console.log(response.data);
       } catch (error) {
         alert(error.response.data.message);
       }
@@ -173,8 +172,6 @@ const Profile = () => {
       }
     }
   };
-
-  console.log(bookingHistory);
 
   return (
     <>

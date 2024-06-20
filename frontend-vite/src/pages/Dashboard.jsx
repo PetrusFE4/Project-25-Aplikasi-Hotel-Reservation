@@ -116,6 +116,7 @@ const Dashboard = () => {
                   <StyledTh>End Date</StyledTh>
                   <StyledTh>Guests</StyledTh>
                   <StyledTh>Price</StyledTh>
+                  <StyledTh>Status</StyledTh>
                   <StyledTh>Check-in At</StyledTh>
                   <StyledTh>Check-out At</StyledTh>
                 </tr>
@@ -132,6 +133,7 @@ const Dashboard = () => {
                     <StyledTd>{formatDate(booking.endDate)}</StyledTd>
                     <StyledTd>{booking.guests}</StyledTd>
                     <StyledTd>{formatPrice(booking.totalPrice)}</StyledTd>
+                    <StyledTd>{booking.isPaid ? "Paid" : "Unpaid"}</StyledTd>
                     <StyledTd>
                       {booking.checkInAt &&
                         formatDateWithTime(booking.checkInAt)}

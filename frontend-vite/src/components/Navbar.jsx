@@ -22,7 +22,7 @@ import axios from "axios";
 import { endpoint } from "../api.js";
 
 const Navbar = () => {
-  const [openmenu, setopenmenu] = useState("false");
+  const [openmenu, setopenmenu] = useState(false);
   const location = useLocation();
 
   const [isLogin, setIsLogin] = useState(false);
@@ -65,7 +65,7 @@ const Navbar = () => {
         <LogoContainer>
           <span>
             <Link to="/" className="link">
-              My Booking
+              Hotel App
             </Link>
           </span>
         </LogoContainer>
@@ -129,7 +129,7 @@ const Navbar = () => {
         </ul>
 
         {/* For Mobile Start */}
-        <h3>Hello, User</h3>
+        <h3>Hello, {user.name ? user.name : "Guest"}</h3>
 
         <ul className="hidden-ul">
           {isLogin ? (

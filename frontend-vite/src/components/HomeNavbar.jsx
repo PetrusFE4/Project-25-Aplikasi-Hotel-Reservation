@@ -46,7 +46,7 @@ import { useNavigate } from "react-router-dom";
 
 const HomeNavbar = () => {
   const location = useLocation();
-  const [openmenu, setopenmenu] = useState("false");
+  const [openmenu, setopenmenu] = useState(false);
   const [openDate, setOpenDate] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState({});
@@ -120,7 +120,7 @@ const HomeNavbar = () => {
         <Wrapper>
           <NavContainer>
             <LogoContainer>
-              <span style={{ cursor: "pointer" }}>My Booking</span>
+              <span style={{ cursor: "pointer" }}>Hotel App</span>
             </LogoContainer>
 
             <BtnContainer>
@@ -183,7 +183,7 @@ const HomeNavbar = () => {
 
             {/* For Mobile Start */}
 
-            <h3>Hello, {user.name}</h3>
+            <h3>Hello, {user.name ? user.name : "Guest"}</h3>
 
             <ul className="hidden-ul">
               {isLogin ? (

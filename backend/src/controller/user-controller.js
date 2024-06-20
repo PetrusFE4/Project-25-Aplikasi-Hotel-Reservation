@@ -4,7 +4,7 @@ const register = async (req, res, next) => {
   try {
     const result = await userService.register(req.body);
     res.status(201).json({
-      message: "Resgiter successfully",
+      message: "Register successfully",
       data: result,
     });
   } catch (e) {
@@ -18,7 +18,7 @@ const login = async (req, res, next) => {
     res.cookie("token", result, {
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "strict",
     });
     res.status(200).json({
@@ -62,10 +62,10 @@ const update = async (req, res, next) => {
     const data = req.body;
     const result = await userService.update(currentEmail, data);
     res.clearCookie("token");
-    res.cookie("token", result, {
+    res.cookie("token", result.newToken, {
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "strict",
     });
     res.status(200).json({
