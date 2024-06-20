@@ -10,10 +10,7 @@ import "../service/scheduler-service.js";
 export const web = express();
 web.use(
   cors({
-    origin: [
-      "https://fe-msib-6-hotel-reservation-02.educalab.id",
-      "https://hotel-booking-app-sepia.vercel.app",
-    ],
+    origin: "*",
     credentials: true,
   })
 );
