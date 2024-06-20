@@ -1,5 +1,5 @@
 import { prismaClient } from "../application/database.js";
-import { dataHotel, dataHotelImage, dataHotelLocation } from "./data.js";
+import { dataHotel, dataHotelImage, featuredCityData } from "./data.js";
 
 const seed = async () => {
   // await prismaClient.hotel.createMany({
@@ -10,9 +10,10 @@ const seed = async () => {
   //   data: dataHotelImage,
   //   skipDuplicates: false,
   // });
-  // await prismaClient.hotelLocation.createMany({
-  //   data: dataHotelLocation,
-  // });
+  await prismaClient.featuredCities.createMany({
+    data: featuredCityData,
+    skipDuplicates: true,
+  });
 };
 
 seed()

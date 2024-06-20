@@ -14,6 +14,10 @@ const registerUserValidation = joi.object({
     "string.empty": "Password is required",
     "string.min": "Password should have a minimum length of 6",
   }),
+  confirmPassword: joi.string().min(6).required().messages({
+    "string.empty": "Password is required",
+    "string.min": "Password should have a minimum length of 6",
+  }),
 });
 
 const loginUserValidation = joi.object({
@@ -26,4 +30,17 @@ const loginUserValidation = joi.object({
   }),
 });
 
-export { registerUserValidation, loginUserValidation };
+const updateUserValidation = joi.object({
+  id: joi.string(),
+  name: joi.string().min(3).max(100).required().messages({
+    "string.empty": "Name is required",
+    "string.min": "Name should have a minimum length of 3",
+    "string.max": "Name should have a maximum length of 100",
+  }),
+  email: joi.string().email().messages({
+    "string.empty": "Email is required",
+    "string.email": "Email should be a valid email",
+  }),
+});
+
+export { registerUserValidation, loginUserValidation, updateUserValidation };

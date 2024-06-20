@@ -4,7 +4,6 @@ const getAllHotels = async () => {
   const hotelData = await prismaClient.hotel.findMany({
     include: {
       images: true,
-      location: true,
     },
   });
 
@@ -13,17 +12,13 @@ const getAllHotels = async () => {
     img: hotel.images.map((image) => image.imgUrl),
     name: hotel.name,
     place: hotel.place,
-    location: {
-      lat: hotel.location?.lat,
-      lng: hotel.location?.lng,
-    },
-    distance: hotel.distance,
     address: hotel.address,
     offer: hotel.offer,
     roomDetails: hotel.roomDetails,
     bedDetails: hotel.bedDetails,
     roomLeft: hotel.roomLeft,
     rating: hotel.rating,
+    reviewsCount: hotel.reviewsCount,
     reviews: hotel.reviews,
     night: hotel.night,
     adult: hotel.adult,
@@ -35,11 +30,11 @@ const getAllHotels = async () => {
 const getHotelById = async (id) => {
   const hotel = await prismaClient.hotel.findUnique({
     where: {
-      id: parseInt(id),
+      id: id,
     },
     include: {
       images: true,
-      location: true,
+      reviews: true,
     },
   });
 
@@ -48,11 +43,6 @@ const getHotelById = async (id) => {
     img: hotel.images.map((image) => image.imgUrl),
     name: hotel.name,
     place: hotel.place,
-    location: {
-      lat: hotel.location?.lat,
-      lng: hotel.location?.lng,
-    },
-    distance: hotel.distance,
     address: hotel.address,
     offer: hotel.offer,
     roomDetails: hotel.roomDetails,
@@ -67,16 +57,42 @@ const getHotelById = async (id) => {
   };
 };
 
-const createHotel = async () => {
-  const hotel = await prismaClient.hotel.create({});
+const getHotelByCity = async (city) => {
+  const hotelData = await prismaClient.hotel.findMany({
+    where: {
+      place: city,
+    },
+    include: {
+      images: true,
+    },
+  });
 
-  const hotelImages = await prismaClient.image.createMany({});
+  return hotelData.map((hotel) => ({
+    id: hotel.id,
+    img: hotel.images.map((image) => image.imgUrl),
+    name: hotel.name,
+    place: hotel.place,
+    address: hotel.address,
+    offer: hotel.offer,
+    roomDetails: hotel.roomDetails,
+    bedDetails: hotel.bedDetails,
+    roomLeft: hotel.roomLeft,
+    rating: hotel.rating,
+    reviewsCount: hotel.reviewsCount,
+    night: hotel.night,
+    adult: hotel.adult,
+    children: hotel.children,
+    price: hotel.price,
+  }));
+};
 
-  const location = await prismaClient.location.create({});
+const getFeaturedCities = async () => {
+  return await prismaClient.featuredCities.findMany();
 };
 
 export default {
   getAllHotels,
   getHotelById,
-  createHotel,
+  getHotelByCity,
+  getFeaturedCities,
 };

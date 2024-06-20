@@ -5,20 +5,21 @@ import { errorMiddleware } from "../middleware/error-middleware.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
+import "../service/scheduler-service.js";
 
 export const web = express();
 web.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://hotel-booking-app-sepia.vercel.app",
+    ],
     credentials: true,
   })
 );
 web.use(cookieParser());
 web.use(express.json());
-web.use(
-  "/hotel-booking-app",
-  express.static(path.join(path.resolve(), "public"))
-);
+web.use(express.static(path.join(path.resolve(), "public")));
 
 web.use(publicRouter);
 web.use(userRouter);

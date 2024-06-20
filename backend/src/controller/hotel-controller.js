@@ -18,10 +18,19 @@ const getHotelById = async (req, res, next) => {
   }
 };
 
-const createHotel = async (req, res, next) => {
+const getHotelByCity = async (req, res, next) => {
   try {
-    const hotelData = await hotelService.createHotel(req.body);
+    const hotelData = await hotelService.getHotelByCity(req.params.city);
     res.json(hotelData);
+  } catch (e) {
+    next(e);
+  }
+};
+
+const getFeaturedCities = async (req, res, next) => {
+  try {
+    const featuredCities = await hotelService.getFeaturedCities();
+    res.json(featuredCities);
   } catch (e) {
     next(e);
   }
@@ -30,5 +39,6 @@ const createHotel = async (req, res, next) => {
 export default {
   getAllHotels,
   getHotelById,
-  createHotel,
+  getHotelByCity,
+  getFeaturedCities,
 };
