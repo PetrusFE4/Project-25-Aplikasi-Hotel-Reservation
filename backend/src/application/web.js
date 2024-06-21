@@ -16,8 +16,8 @@ web.use(
 );
 web.use(cookieParser());
 web.use(express.json());
-// web.use("/images", express.static(path.join(path.resolve(), "public")));
-web.use("/images", express.static("public"));
+web.use("/images", express.static(path.join(path.resolve(), "public")));
+// web.use("/images", express.static("public"));
 
 web.use(publicRouter);
 web.use(userRouter);
