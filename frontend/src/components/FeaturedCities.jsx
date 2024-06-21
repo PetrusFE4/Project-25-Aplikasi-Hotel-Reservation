@@ -44,13 +44,13 @@ const FeaturedCities = () => {
           <Card key={city.id}>
             <Link to="/hotels" className="link">
               <ImgContainer>
-                <img src={baseImageUrl + "/" + city.img} alt="" />
+                <img src={baseImageUrl + "/images/" + city.img} alt="" />
               </ImgContainer>
               <InfoContainer>
                 <Country>
                   <h1>{city.name}</h1>
                   <img
-                    src={baseImageUrl + "/" + city.countryImg}
+                    src={baseImageUrl + "/images/" + city.countryImg}
                     alt=""
                     className="flag-img"
                   />

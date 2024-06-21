@@ -117,7 +117,7 @@ const SearchedHotelsList = () => {
             <ImgContainer>
               <Link to={`/hotel/${hotel.id}`}>
                 <img
-                  src={baseImageUrl + "/" + hotel.img[0]}
+                  src={baseImageUrl + "/images/" + hotel.img[0]}
                   alt="hotel"
                   style={{
                     transform: "scale(1)",

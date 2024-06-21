@@ -121,7 +121,7 @@ const HotelDetails = ({ hotel }) => {
             {hotel.img?.slice(1, 3).map((imgSrc, index) => (
               <div key={index}>
                 <img
-                  src={baseImageUrl + "/" + imgSrc}
+                  src={baseImageUrl + "/images/" + imgSrc}
                   alt="hotel"
                   title="Lihat gambar"
                   onClick={() => handleImgClickForSlider(index + 1)}
@@ -132,7 +132,7 @@ const HotelDetails = ({ hotel }) => {
 
           <BigImgContainer>
             <img
-              src={baseImageUrl + "/" + hotel.img?.slice(0, 1)}
+              src={baseImageUrl + "/images/" + hotel.img?.slice(0, 1)}
               alt="hotel"
               title="Lihat gambar"
               onClick={() => handleImgClickForSlider(0)}
@@ -144,7 +144,7 @@ const HotelDetails = ({ hotel }) => {
           {hotel.img?.slice(3, 8).map((imgSrc, index) => (
             <div key={index}>
               <img
-                src={baseImageUrl + "/" + imgSrc}
+                src={baseImageUrl + "/images/" + imgSrc}
                 alt="hotel"
                 title="Lihat gambar"
                 onClick={() => handleImgClickForSlider(index + 3)}
@@ -171,7 +171,7 @@ const HotelDetails = ({ hotel }) => {
             />
 
             <img
-              src={baseImageUrl + "/" + hotel.img[slideNumber]}
+              src={baseImageUrl + "/images/" + hotel.img[slideNumber]}
               alt="hotel"
             />
           </Slides>
