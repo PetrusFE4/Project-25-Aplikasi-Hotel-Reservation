@@ -7,9 +7,11 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import "../service/scheduler-service.js";
 
+export const web = express();
+
 const allowedOrigins = [
   "https://fe-msib-6-hotel-reservation-02.educalab.id",
-  "https://hotel-booking-app-sepia.vercel.app"
+  "https://hotel-booking-app-sepia.vercel.app",
 ];
 
 const corsOptions = {
@@ -26,10 +28,9 @@ const corsOptions = {
 web.use(cors(corsOptions));
 web.use(cookieParser());
 web.use(express.json());
-web.use("/images", express.static(path.join(path.resolve(), "public")));
-// web.use("/images", express.static("public"));
+// web.use("/images", express.static(path.join(path.resolve(), "public")));
+web.use("/images", express.static("public"));
 
 web.use(publicRouter);
 web.use(userRouter);
 web.use(errorMiddleware);
-export const web = express();
