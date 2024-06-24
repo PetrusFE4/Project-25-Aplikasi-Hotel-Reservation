@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/api/users/current
+GET https://api-msib-6-hotel-reservation-02.educalab.id/ping
 Content-Type: application/json
 Accept: application/json
 

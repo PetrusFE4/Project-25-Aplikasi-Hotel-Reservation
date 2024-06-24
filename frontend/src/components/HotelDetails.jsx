@@ -121,7 +121,7 @@ const HotelDetails = ({ hotel }) => {
             {hotel.img?.slice(1, 3).map((imgSrc, index) => (
               <div key={index}>
                 <img
-                  src={"images/" + imgSrc}
+                  src={`https://fe-msib-6-hotel-reservation-02.educalab.id/images/${imgSrc}`}
                   alt="hotel"
                   title="Lihat gambar"
                   onClick={() => handleImgClickForSlider(index + 1)}
@@ -132,7 +132,10 @@ const HotelDetails = ({ hotel }) => {
 
           <BigImgContainer>
             <img
-              src={"images/" + hotel.img?.slice(0, 1)}
+              src={
+                "https://fe-msib-6-hotel-reservation-02.educalab.id/images/" +
+                hotel.img?.slice(0, 1)
+              }
               alt="hotel"
               title="Lihat gambar"
               onClick={() => handleImgClickForSlider(0)}
@@ -144,7 +147,10 @@ const HotelDetails = ({ hotel }) => {
           {hotel.img?.slice(3, 8).map((imgSrc, index) => (
             <div key={index}>
               <img
-                src={"images/" + imgSrc}
+                src={
+                  "https://fe-msib-6-hotel-reservation-02.educalab.id/images/" +
+                  imgSrc
+                }
                 alt="hotel"
                 title="Lihat gambar"
                 onClick={() => handleImgClickForSlider(index + 3)}
@@ -170,7 +176,13 @@ const HotelDetails = ({ hotel }) => {
               onClick={() => setOpenSlider(false)}
             />
 
-            <img src={"images/" + hotel.img[slideNumber]} alt="hotel" />
+            <img
+              src={
+                "https://fe-msib-6-hotel-reservation-02.educalab.id/images/" +
+                hotel.img[slideNumber]
+              }
+              alt="hotel"
+            />
           </Slides>
         </Slider>
       )}
